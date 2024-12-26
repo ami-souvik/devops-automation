@@ -1,0 +1,12 @@
+FROM node:alpine
+
+# Declaring env
+ENV NODE_ENV=development
+
+# Setting up the work directory
+WORKDIR /front
+
+# Installing dependencies
+COPY ./package.json /front/
+
+RUN npm i

@@ -1,0 +1,28 @@
+services:
+
+  back:
+    build:
+      context: ./back
+      dockerfile: Dockerfile.dev
+    container_name: back
+    working_dir: /back
+    env_file: ./.env
+    volumes:
+      - ./back:/back
+      - ~/.aws:/root/.aws
+    ports:
+      - "8000:8000"
+    command: [ "python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000" ]
+  # front:
+  #   build:
+  #     context: ./front
+  #     dockerfile: Dockerfile.dev
+  #   container_name: front
+  #   working_dir: /front
+  #   volumes:
+  #     - ./front:/front
+  #   ports:
+  #     - "5173:5173"
+  #   command: [ "npm", "run", "dev" ]
+  #   depends_on:
+  #     - back
