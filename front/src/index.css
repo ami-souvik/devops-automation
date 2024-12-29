@@ -47,16 +47,9 @@ a {
   text-decoration: inherit;
 }
 
-a:hover {
-  color: #9ca3af;
-  text-decoration: underline;
-  text-underline-offset: 4px;
-}
-
 body {
   margin: 0;
   display: flex;
-  /* place-items: center; */
   min-width: 320px;
   min-height: 100vh;
 }
@@ -85,10 +78,6 @@ button:hover {
   :root {
     color: #213547;
     background-color: #ffffff;
-  }
-
-  a:hover {
-    /* color: #747bff; */
   }
 
   button {

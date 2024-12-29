@@ -17,7 +17,7 @@ export default function OverviewTab({ data }) {
         {
           data.ecr && <div className="grid grid-cols-2 auto-cols-auto">
             <a href={`https://${az}.console.aws.amazon.com/ecr/repositories/private/${getValueFromKeyPath(data, "ecr.registryId")}/${getValueFromKeyPath(data, "ecr.repositoryName")}?region=${az}`}
-              target="_blank" className="text-sm">
+              target="_blank" className="hover:text-gray-400 hover:underline hover:underline-offset-4 text-sm">
               <div className="flex space-x-2 place-items-center">
                 <span className="text-sm font-semibold">Elastic Container Repository</span>
                 <ExternalLink size={16} />
@@ -28,7 +28,7 @@ export default function OverviewTab({ data }) {
         {
           data.apigateway && <div className="grid grid-cols-2 auto-cols-auto">
             <a href={`https://${az}.console.aws.amazon.com/apigateway/main/develop/routes?api=${getValueFromKeyPath(data, "apigateway.ApiId")}&region=${az}`}
-              target="_blank" className="text-sm">
+              target="_blank" className="hover:text-gray-400 hover:underline hover:underline-offset-4 text-sm">
               <div className="flex space-x-2 place-items-center">
                 <span className="text-sm font-semibold">API Gateway</span>
                 <ExternalLink size={16} />
