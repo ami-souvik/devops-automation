@@ -32,5 +32,4 @@ class APIGateway(AWSResource):
         try:
             return self.client.delete_api(ApiId=api_id)
         except Exception as e:
-            print(f"An error occurred: {e}")
             return f"An error occurred: {e}"

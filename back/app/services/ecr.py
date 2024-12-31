@@ -37,5 +37,4 @@ class ECR(AWSResource):
                 force=True|False
             )
         except Exception as e:
-            print(f"An error occurred: {e}")
             return f"An error occurred: {e}"

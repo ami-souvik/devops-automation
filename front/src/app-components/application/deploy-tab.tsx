@@ -2,11 +2,12 @@ import { Copy } from "lucide-react";
 import { getValueFromKeyPath } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { useSelector } from "react-redux";
 
 function LineItem({ data }) {
     return <div className="space-y-2">
         <span className="text-sm font-semibold">{data.label}</span>
-        <div className="border-l-4 flex justify-between items-center py-2 px-4 space-x-2">
+        <div className="flex justify-between items-center py-2 px-4 space-x-2">
             <span className="text-sm">{data.script}</span>
             <Button size="icon" className="w-6 h-6 rounded"
                 onClick={() => {
@@ -19,17 +20,18 @@ function LineItem({ data }) {
 }
 
 export default function DeployTab({ data }) {
+    const az = useSelector(state => state.data.az)
     const repositoryUri = getValueFromKeyPath(data, "ecr.repositoryUri")
     if(!repositoryUri) return null
     const [dockerRegistry, appName] = repositoryUri?.split("/")
     const contents = [
         {
             label: "1. Retrieve an authentication token and authenticate your Docker client to your registry. Use the AWS CLI:",
-            script: `aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin ${dockerRegistry}`
+            script: `aws ecr get-login-password --region ${az} | docker login --username AWS --password-stdin ${dockerRegistry}`
         },
         {
             label: "2. Build your Docker image using the following command. You can skip this step if your image is already built:",
-            script: `docker build -t ${appName}`
+            script: `docker build -t ${appName} .`
         },
         {
             label: "3. After the build completes, tag your image so you can push the image to this repository:",
