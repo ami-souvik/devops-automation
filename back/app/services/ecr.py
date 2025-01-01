@@ -7,7 +7,7 @@ class ECR(AWSResource):
     def get(self, resource_arn: str):
         arn_parts = resource_arn.split(":")
         resource_part = arn_parts[-1]
-        repository_name = resource_part.split("/")[-1]
+        repository_name = "/".join(resource_part.split("/")[1:])
         response = self.client.describe_repositories(
             registryId=arn_parts[4],
             repositoryNames=[repository_name]
@@ -16,7 +16,7 @@ class ECR(AWSResource):
 
     def create(self, name):
         return self.client.create_repository(
-            repositoryName=name,
+            repositoryName=f"{name}/web",
             tags=self.get_tags(name),
             imageTagMutability='MUTABLE',
             imageScanningConfiguration={
