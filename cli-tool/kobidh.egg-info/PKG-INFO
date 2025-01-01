@@ -1,0 +1,60 @@
+Metadata-Version: 2.1
+Name: kobidh
+Version: 0.0.1
+Summary: This is a tool for automating your DevOps processes.
+Home-page: <github url where the tool code will remain>
+Author: Souvik Dey
+Author-email: dsouvik141@gmail.com
+License: <the license you chose>
+Classifier: Programming Language :: Python :: 3.13
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+Requires-Dist: certifi==2024.12.14
+Requires-Dist: charset-normalizer==3.4.1
+Requires-Dist: click>=8.1.8
+Requires-Dist: docutils==0.21.2
+Requires-Dist: idna==3.10
+Requires-Dist: jaraco.classes==3.4.0
+Requires-Dist: jaraco.context==6.0.1
+Requires-Dist: jaraco.functools==4.1.0
+Requires-Dist: keyring==25.6.0
+Requires-Dist: markdown-it-py==3.0.0
+Requires-Dist: mdurl==0.1.2
+Requires-Dist: more-itertools==10.5.0
+Requires-Dist: nh3==0.2.20
+Requires-Dist: packaging==24.2
+Requires-Dist: pkginfo==1.12.0
+Requires-Dist: Pygments==2.18.0
+Requires-Dist: readme_renderer==44.0
+Requires-Dist: requests==2.32.3
+Requires-Dist: requests-toolbelt==1.0.0
+Requires-Dist: rfc3986==2.0.0
+Requires-Dist: rich==13.9.4
+Requires-Dist: setuptools==75.6.0
+Requires-Dist: twine==6.0.1
+Requires-Dist: urllib3==2.3.0
+Requires-Dist: wheel==0.45.1
+
+Pick a license from https://choosealicense.com/.
+
+[Click](https://click.palletsprojects.com/en/stable/) is used for building this CLI tool
+
+### Setup development environment
+
+Setup virtual environment
+```bash
+python3 -m venv venv && source venv/bin/activate
+```
+
+Install required packages
+```bash
+pip install --no-cache-dir --upgrade -r requirements.txt
+```
+
+Install the tool in the virtual environment
+```bash
+python setup.py develop
+```
+
+Start your development

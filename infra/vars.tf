@@ -1,7 +1,4 @@
-variable "aws_access_key" {
-  type = string
-}
-
-variable "aws_access_secret" {
-  type = string
+variable "aws_az" {
+  type        = string
+  description = "Specify the availability zone where you want your AWS resources to reside"
 }

@@ -1,1 +1,7 @@
-# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/autoscaling_group
+resource "aws_s3_bucket" "kobidh-platform" {
+  bucket = "kobidh-platform"
+
+  tags = {
+    owner = "kobidh"
+  }
+}

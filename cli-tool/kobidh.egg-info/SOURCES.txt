@@ -1,0 +1,13 @@
+MANIFEST.in
+README.md
+kobidh.py
+setup.py
+app/__init__.py
+app/__main__.py
+app/application.py
+kobidh.egg-info/PKG-INFO
+kobidh.egg-info/SOURCES.txt
+kobidh.egg-info/dependency_links.txt
+kobidh.egg-info/entry_points.txt
+kobidh.egg-info/requires.txt
+kobidh.egg-info/top_level.txt
