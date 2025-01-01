@@ -16,7 +16,6 @@ jaraco.functools==4.1.0
 jaraco.text==3.12.1
 jmespath==1.0.1
 keyring==25.6.0
--e git+https://github.com/ami-souvik/devops-automation.git@1a5f3b08627df8af5fcfd268d0ab3140a5ea7734#egg=kobidh&subdirectory=cli-tool
 markdown-it-py==3.0.0
 mdurl==0.1.2
 more-itertools==10.5.0
