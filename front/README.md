@@ -48,3 +48,9 @@ export default tseslint.config({
   },
 })
 ```
+
+Build docker image
+```bash
+sudo docker build --file Dockerfile.dev -t devops-automation-front . && sudo docker run -it --name devops-automation-front -p 5173:5173 devops-automation-front
+
+```
