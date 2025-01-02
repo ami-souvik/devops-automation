@@ -7,6 +7,10 @@ ENV NODE_ENV=development
 WORKDIR /front
 
 # Installing dependencies
-COPY ./package.json /front/
+COPY ./package*.json /front/
 
 RUN npm i
+
+COPY . /front
+
+CMD [ "npm", "run", "dev" ]
