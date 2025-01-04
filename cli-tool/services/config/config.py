@@ -1,9 +1,11 @@
 import boto3
 
-class AWS:
-    def __init__(self, region: str = None):
+class Config:
+    def __init__(self, name: str, region: str = None):
+        self.name = name
         session = boto3.session.Session()
         self.region = session.region_name if not region else region
+        self.session = session
 
     def get_tags(self, name: str, owner: bool=False) -> list:
         v2_tags = self.get_v2_tags(name, owner)

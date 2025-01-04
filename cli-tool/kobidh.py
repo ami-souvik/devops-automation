@@ -35,11 +35,29 @@ def test():
 
 # kobidh environment.create development -r ap-south-1
 @cli.command(name="environment.create", help="Create a new environment")
-@_require_region
+# @_require_region
 @click.argument('name', type=str)
-def environment_create(name, region):
+def environment_create(name, region=None):
     click.echo(f"Creating {name} environment...")
-    Environment(name)
+    Environment(name, region).create()
+
+
+# kobidh environment.delete development -r ap-south-1
+@cli.command(name="environment.delete", help="Delete an environment")
+# @_require_region
+@click.argument('name', type=str)
+def environment_delete(name, region=None):
+    click.echo(f"Deleting {name} environment...")
+    Environment(name, region).delete()
+
+
+# kobidh environment.describe development -r ap-south-1
+@cli.command(name="environment.describe", help="Describe an environment")
+# @_require_region
+@click.argument('name', type=str)
+def environment_describe(name, region=None):
+    click.echo(f"Describing {name} environment...")
+    Environment(name, region).describe()
 
 
 # kobidh apps.create fastapi-basicapp -e development
