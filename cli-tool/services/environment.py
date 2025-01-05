@@ -12,11 +12,11 @@ class Environment:
 
     def describe(self):
         self.env_config.setup()
-        # self.ecs_handler.run()
 
     def create(self):
         self.env_config.setup()
         self.vpc_handler.run()
+        self.ecs_handler.run()
         pass
 
     def update(self):
@@ -25,3 +25,4 @@ class Environment:
     def delete(self):
         self.env_config.delete()
         self.vpc_handler.run()
+        self.ecs_handler.run()

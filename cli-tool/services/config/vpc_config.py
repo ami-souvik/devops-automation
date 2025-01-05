@@ -1,6 +1,7 @@
 import ipaddress
 import boto3
 from click import echo
+from utils.logging import log_with_color
 from services.config import Config
 
 class VPCConfig(Config):
@@ -33,7 +34,10 @@ class VPCConfig(Config):
             "private": private_subnets
         }
 
-    def __eq__(self, other: object) -> bool:
+    def __dir__(self):
+        return ['vpc_id', 'vpc_name', 'cidr', 'subnets']
+        
+    def __eq__(self, other: 'VPCConfig') -> bool:
         if isinstance(other, VPCConfig):
             return (self.vpc_id == other.vpc_id and self.vpc_name == other.vpc_name and self.cidr == other.cidr
                     and self.subnets == other.subnets)
@@ -58,6 +62,16 @@ class VPCConfig(Config):
         except Exception as e:
             echo(f"Error fetching availability zones: {str(e)}")
             return []
+
+    def compare_logs(self, other: 'VPCConfig', level=0) -> bool:
+        logs = []
+        logs.append(("# VPC Configuration", 'blue', level))
+        logs.append(("{", 'white', level))
+        for attr in dir(self):
+            if getattr(other, attr) != getattr(self, attr):
+                logs.append((f"{attr}: {getattr(other, attr)} -> {getattr(self, attr)}", 'yellow', level+1))
+        logs.append(("}", 'white', level))
+        return logs
 
     def json(self):
         return {

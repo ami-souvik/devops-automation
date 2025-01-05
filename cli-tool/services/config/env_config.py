@@ -1,6 +1,7 @@
 import json
 from meta import VERSION
 from click import confirm, echo
+from utils.logging import log, log_list
 from services.config import Config
 from services.config.vpc_config import VPCConfig
 from services.config.ecs_config import ECSConfig
@@ -21,14 +22,34 @@ class EnvironmentConfig(Config):
             self.vpc = VPCConfig(name, region)
             self.ecs = ECSConfig(name, region)
         
-        def __eq__(self, other: object) -> bool:
-            if isinstance(other, EnvironmentConfig.Template):
-                return (self.name == other.name and self.region == other.region and self.kobidh_version == other.kobidh_version
-                        and self.vpc == other.vpc and self.ecs == other.ecs)
-            return False
+        def __dir__(self):
+            return ['name', 'region', 'kobidh_version', 'vpc', 'ecs']
+        
+        def __eq__(self, other: 'EnvironmentConfig.Template') -> bool:
+            return (self.name == other.name and self.region == other.region and self.kobidh_version == other.kobidh_version and
+                self.vpc == other.vpc and self.ecs == other.ecs)
 
         def __ne__(self, other: object) -> bool:
             return not self.__eq__(other)
+        
+        def compare_logs(self, other: 'EnvironmentConfig.Template') -> list[tuple]:
+            level = 0
+            logs = []
+            logs.append(("# Environment Configuration", 'blue', level))
+            logs.append(("{", 'white', level))
+            object_logs = []
+            for attr in dir(other):
+                if getattr(other, attr) != getattr(self, attr):
+                    if attr == 'vpc':
+                        object_logs.extend(self.vpc.compare_logs(other.vpc, level=1))
+                    elif attr == 'ecs':
+                        object_logs.extend(self.ecs.compare_logs(other.ecs, level=1))
+                    else:
+                        logs.append((f"{attr}: {getattr(other, attr)} -> {getattr(self, attr)}", 'yellow', level+1))
+            logs.extend(object_logs)
+            logs.append(("}\n", 'white', level))
+            log_list(logs)
+
         
         def json(self):
             self.vpc = self.vpc.json()
@@ -63,7 +84,12 @@ class EnvironmentConfig(Config):
         configuration = record["configuration"]
         env_config = EnvironmentConfig.Template(self.name, self.region)
         env_config.parse_json(configuration)
-        return self.config != env_config
+        echo("Comparing environment_configs:")
+        if self.config != env_config:
+            self.config.compare_logs(env_config)
+            return True
+        log("Configurations Matched")
+        return False
 
     def _configure(self):
         pass
@@ -100,12 +126,8 @@ class EnvironmentConfig(Config):
         if not record:
             self._configure()
             self._update()
-
-        configuration = record["configuration"]
-        env_config = EnvironmentConfig.Template(self.name, self.region)
-        env_config.parse_json(configuration)
         # the following confirm will be prompted when the CONFIGURATION mismatches
-        if self.config != env_config and confirm('Do you want to update the environment config?'):
+        elif self._compare(record) and confirm('Do you want to update the environment config?'):
             record = self._update()
         return record
 
