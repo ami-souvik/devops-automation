@@ -11,16 +11,16 @@ router = APIRouter()
 @router.get("/list", tags=["list_apps"])
 async def read_apps(az: str):
     """
-    Endpoint to list and group AWS resources by the "name" tag
-    for resources with the "publisher" tag equal to "kobidh".
+    Endpoint to list and group AWS resources by the "Name" tag
+    for resources with the "Publisher" tag equal to "kobidh".
 
     Returns:
-        A dictionary grouping resource ARNs by their "name" tag.
+        A dictionary grouping resource ARNs by their "Name" tag.
     """
     try:
         client = boto3.client('resourcegroupstaggingapi', region_name=az)
         response = client.get_resources(
-            TagFilters=[{'Key': 'publisher', 'Values': ['kobidh']}]
+            TagFilters=[{'Key': 'Publisher', 'Values': ['kobidh']}]
         )
         grouped_resources = defaultdict(dict)
         # Group resources by their Resource ARN
@@ -54,7 +54,7 @@ async def get_app(
     try:
         client = boto3.client('resourcegroupstaggingapi', region_name=az)
         response = client.get_resources(
-            TagFilters=[{'Key': 'publisher', 'Values': ['kobidh']}, {'Key': 'name', 'Values': [app_id]}]
+            TagFilters=[{'Key': 'Publisher', 'Values': ['kobidh']}, {'Key': 'name', 'Values': [app_id]}]
         )
         grouped_resources = defaultdict(dict)
         grouped_resources["availability_zone"] = az
@@ -101,7 +101,7 @@ async def delete_app(
     try:
         client = boto3.client('resourcegroupstaggingapi', region_name=az)
         response = client.get_resources(
-            TagFilters=[{'Key': 'publisher', 'Values': ['kobidh']}, {'Key': 'name', 'Values': [app_id]}]
+            TagFilters=[{'Key': 'Publisher', 'Values': ['kobidh']}, {'Key': 'name', 'Values': [app_id]}]
         )
         grouped_resources = defaultdict(dict)
         grouped_resources["availability_zone"] = az

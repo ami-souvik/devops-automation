@@ -7,6 +7,7 @@ from botocore.exceptions import ClientError
 from utils.logging import log, log_warning
 from services.config.env_config import EnvironmentConfig
 
+
 class VPC:
 
     def __init__(self, env_config: EnvironmentConfig):
@@ -41,8 +42,10 @@ class VPC:
             )
         except ClientError as e:
             if e.response['Error']['Code'] == 'DryRunOperation':
-                log_warning("DryRun passed: You have the required permissions to create the VPC.")
-                vpc_response = {"Vpc": {"VpcId": f"dummy-vpc-{"".join(str(uuid4()).split("-")[:3])}"}}
+                log_warning(
+                    "DryRun passed: You have the required permissions to create the VPC.")
+                vpc_response = {
+                    "Vpc": {"VpcId": f"dummy-vpc-{"".join(str(uuid4()).split("-")[:3])}"}}
         self.config.vpc_id = vpc_response.get('Vpc')['VpcId']
         log(f"VPC created with id: {self.config.vpc_id}")
         subnets_response = []
@@ -72,8 +75,10 @@ class VPC:
                 )
             except ClientError as e:
                 if e.response['Error']['Code'] == 'DryRunOperation':
-                    log_warning("DryRun passed: You have the required permissions to create the subnet.")
-                    subnet_response = {"Subnet": {"SubnetId": f"dummy-subnet-{"".join(str(uuid4()).split("-")[:3])}"}}
+                    log_warning(
+                        "DryRun passed: You have the required permissions to create the subnet.")
+                    subnet_response = {"Subnet": {
+                        "SubnetId": f"dummy-subnet-{"".join(str(uuid4()).split("-")[:3])}"}}
             log(f"Subnet created with id: {subnet_response.get('Subnet').get("SubnetId")}")
             subnets_response.append(subnet_response.get('Subnet'))
         return {
@@ -109,10 +114,12 @@ class VPC:
             )
         except ClientError as e:
             if e.response['Error']['Code'] == 'DryRunOperation':
-                log_warning("DryRun passed: You have the required permissions to describe the VPCs.")
-                vpcs_response = {"Vpcs": [{"VpcId": f"dummy-vpc-{"".join(str(uuid4()).split("-")[:3])}"}]}
+                log_warning(
+                    "DryRun passed: You have the required permissions to describe the VPCs.")
+                vpcs_response = {
+                    "Vpcs": [{"VpcId": f"dummy-vpc-{"".join(str(uuid4()).split("-")[:3])}"}]}
         if len(vpcs_response.get('Vpcs')) == 0:
-            return { 'Vpc': None }
+            return {'Vpc': None}
         vpc_response = vpcs_response.get('Vpcs')[0]
         self.config.vpc_id = vpc_response['VpcId']
         log(f"VPC found with id: {self.config.vpc_id}")
@@ -130,8 +137,10 @@ class VPC:
             )
         except ClientError as e:
             if e.response['Error']['Code'] == 'DryRunOperation':
-                log_warning("DryRun passed: You have the required permissions to describe the Subnets.")
-                subnets_response = {"Subnets": [{"SubnetId": f"dummy-subnet-{"".join(str(uuid4()).split("-")[:3])}"}]}
+                log_warning(
+                    "DryRun passed: You have the required permissions to describe the Subnets.")
+                subnets_response = {"Subnets": [
+                    {"SubnetId": f"dummy-subnet-{"".join(str(uuid4()).split("-")[:3])}"}]}
         subnets_response['Vpc'] = vpc_response
         log(f"Subnets found with ids: {[resp.get("SubnetId") for resp in subnets_response.get("Subnets")]}")
         return subnets_response
@@ -156,7 +165,8 @@ class VPC:
                 )
             except ClientError as e:
                 if e.response['Error']['Code'] == 'DryRunOperation':
-                    log_warning("DryRun passed: You have the required permissions to delete the Subnet.")
+                    log_warning(
+                        "DryRun passed: You have the required permissions to delete the Subnet.")
         try:
             response = self.client.delete_vpc(
                 VpcId=self.config.vpc_id,
@@ -164,7 +174,8 @@ class VPC:
             )
         except ClientError as e:
             if e.response['Error']['Code'] == 'DryRunOperation':
-                log_warning("DryRun passed: You have the required permissions to delete the VPC.")
+                log_warning(
+                    "DryRun passed: You have the required permissions to delete the VPC.")
         self.config.vpc_id = None
 
     def describe(self):

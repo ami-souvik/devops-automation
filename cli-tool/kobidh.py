@@ -3,6 +3,7 @@ import click
 from time import sleep
 from services.environment import Environment
 
+
 def _require_region(func):
     @click.option('--region', '-r', prompt='region', help='region')
     @functools.wraps(func)
@@ -10,6 +11,7 @@ def _require_region(func):
         return func(*args, **kwargs)
 
     return wrapper
+
 
 def _require_environment(func):
     @click.option('--environment', '-e', prompt='environment', help='environment')
@@ -19,9 +21,11 @@ def _require_environment(func):
 
     return wrapper
 
+
 @click.group()
 def cli():
     pass
+
 
 @cli.command()
 def test():

@@ -11,6 +11,6 @@ class AWSResource:
     
     def get_v2_tags(self, name: str) -> list:
         return {
-            'publisher': 'kobidh',
-            'name': name
+            'Publisher': 'kobidh',
+            'Name': name
         }

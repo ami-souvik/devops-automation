@@ -1,8 +1,9 @@
 import ipaddress
 import boto3
 from click import echo
+from services.config import Config
 
-class VPCConfig:
+class VPCConfig(Config):
     """
         Contains VPC configuration details
     """
@@ -32,7 +33,7 @@ class VPCConfig:
             "private": private_subnets
         }
 
-    def __eq__(self, other):
+    def __eq__(self, other: object) -> bool:
         if isinstance(other, VPCConfig):
             return (self.vpc_id == other.vpc_id and self.vpc_name == other.vpc_name and self.cidr == other.cidr
                     and self.subnets == other.subnets)
@@ -66,13 +67,15 @@ class VPCConfig:
             "subnets": self.subnets
         }
     
-    def parse_json(self, json_data: str):
+    def parse_json(self, json_data: dict):
         """
         Deserialize a JSON string into an VPCConfig object.
 
         :param json_data: JSON string to deserialize.
         """
-        self.vpc_id = json_data["vpc_id"]
-        self.vpc_name = json_data["vpc_name"]
-        self.cidr = json_data["cidr"]
-        self.subnets = json_data["subnets"]
+        if not json_data:
+            return
+        self.vpc_id = json_data.get("vpc_id", None)
+        self.vpc_name = json_data.get("vpc_name", None)
+        self.cidr = json_data.get("cidr", None)
+        self.subnets = json_data.get("subnets", None)

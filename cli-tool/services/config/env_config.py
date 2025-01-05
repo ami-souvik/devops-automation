@@ -1,7 +1,7 @@
 import json
 from meta import VERSION
 from click import confirm, echo
-from services.config.config import Config
+from services.config import Config
 from services.config.vpc_config import VPCConfig
 from services.config.ecs_config import ECSConfig
 from resources.dynamodb import DynamoDB
@@ -17,20 +17,42 @@ class EnvironmentConfig(Config):
         def __init__(self, name: str, region: str):
             self.name = name
             self.region = region
+            self.kobidh_version = VERSION
             self.vpc = VPCConfig(name, region)
+            self.ecs = ECSConfig(name, region)
         
-        def __eq__(self, other):
+        def __eq__(self, other: object) -> bool:
             if isinstance(other, EnvironmentConfig.Template):
-                return (self.name == other.name and self.region == other.region and self.vpc == other.vpc)
+                return (self.name == other.name and self.region == other.region and self.kobidh_version == other.kobidh_version
+                        and self.vpc == other.vpc and self.ecs == other.ecs)
             return False
 
+        def __ne__(self, other: object) -> bool:
+            return not self.__eq__(other)
+        
         def json(self):
             self.vpc = self.vpc.json()
+            self.ecs = self.ecs.json()
             return {
                 "name": self.name,
                 "region": self.region,
-                "vpc": self.vpc
+                "vpc": self.vpc,
+                "ecs": self.ecs
             }
+        
+        def parse_json(self, json_data: dict):
+            """
+            Deserialize a JSON string into an EnvironmentConfig.Template object.
+
+            :param json_data: JSON string to deserialize.
+            """
+            if not json_data:
+                return
+            self.kobidh_version = json_data.get("kobidh_version", None)
+            self.vpc = VPCConfig(self.name, self.region)
+            self.vpc.parse_json(json_data.get("vpc", None))
+            self.ecs = ECSConfig(self.name, self.region)
+            self.ecs.parse_json(json_data.get("ecs", None))
     
     def __init__(self, name: str, region: str=None):
         super().__init__(name, region)
@@ -39,12 +61,9 @@ class EnvironmentConfig(Config):
 
     def _compare(self, record):
         configuration = record["configuration"]
-        if configuration.get("kobidh_version", None) != VERSION:
-            return True
-        vpc = configuration["vpc"]
-        vpc_config = VPCConfig(self.name, self.region)
-        vpc_config.parse_json(vpc)
-        return not self.config.vpc == vpc_config
+        env_config = EnvironmentConfig.Template(self.name, self.region)
+        env_config.parse_json(configuration)
+        return self.config != env_config
 
     def _configure(self):
         pass
@@ -81,8 +100,12 @@ class EnvironmentConfig(Config):
         if not record:
             self._configure()
             self._update()
+
+        configuration = record["configuration"]
+        env_config = EnvironmentConfig.Template(self.name, self.region)
+        env_config.parse_json(configuration)
         # the following confirm will be prompted when the CONFIGURATION mismatches
-        elif self._compare(record) and confirm('Do you want to update the environment config?'):
+        if self.config != env_config and confirm('Do you want to update the environment config?'):
             record = self._update()
         return record
 
