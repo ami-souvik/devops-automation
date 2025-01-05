@@ -20,3 +20,6 @@ python setup.py develop
 ```
 
 Start your development
+
+NOTES:
+1. Re-design the current infrastructure management using CloudFormation with the Troposphere Python library.
