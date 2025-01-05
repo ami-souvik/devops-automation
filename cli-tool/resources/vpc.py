@@ -5,7 +5,7 @@ from uuid import uuid4
 import boto3
 from botocore.exceptions import ClientError
 from troposphere import Template, Parameter, Ref, GetAtt
-from troposphere.ec2 import VPC, Subnet
+from troposphere.ec2 import VPC as VPCResource, Subnet
 from utils.logging import log, log_warning
 from services.config.env_config import EnvironmentConfig
 
@@ -196,8 +196,8 @@ class VPC:
             'Key': 'Name',
             'Value': self.config.vpc_name
         })
-        vpc = VPC(
-            self.config.vpc_name,
+        vpc = VPCResource(
+            self.config.vpc_name.replace("-", ""),
             CidrBlock=self.config.cidr,
             EnableDnsSupport=False,
             EnableDnsHostnames=False,
@@ -213,7 +213,7 @@ class VPC:
                 'Value': subnet["name"]
             })
             subnet = Subnet(
-                subnet["name"],
+                subnet["name"].replace("-", ""),
                 AvailabilityZone=subnet["az"],
                 CidrBlock=subnet["cidr"],
                 VpcId=Ref(vpc),

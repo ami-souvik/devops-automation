@@ -4,7 +4,7 @@ from services.config.env_config import EnvironmentConfig
 
 class Environment:
 
-    def __init__(self, name: str, region: str):
+    def __init__(self, name: str, region: str=None):
         self.env_config = EnvironmentConfig(name, region)
         self.vpc_handler = VPC(self.env_config)
         self.ecs_handler = ECS(self.env_config)
@@ -26,3 +26,7 @@ class Environment:
         self.env_config.delete()
         self.vpc_handler.run()
         self.ecs_handler.run()
+
+    def configure(self):
+        self.vpc_handler.configure()
+        self.vpc_handler.apply()
